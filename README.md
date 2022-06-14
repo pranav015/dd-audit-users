@@ -3,12 +3,14 @@ This script takes stock of all the active users in both Datadog and creates a CS
 
 
 # How to use
-Initialize project
+1.) Initialize project
 
 `bundle install`
 
-Run the follwoing command with the region paramter to retreive datadog user information for that region
+2.) Add your Datadog APP and API keys to the .env file
 
-**NOTE**: enter `US` or `EU` for the region
+3.) Run the follwoing command with the region paramter to retreive datadog user information for that region
 
 `./datadog_audit.rb <region>`
+
+**NOTE**: enter `US` or `EU` for the region
