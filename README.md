@@ -3,8 +3,12 @@ This script takes stock of all the active users in both Datadog and creates a CS
 
 
 # How to use
-Run the follwoing command with the region you would like to retrieve user information for
+Initialize project
 
-**NOTE: enter `US` or `EU` for the region
+`bundle install`
+
+Run the follwoing command with the region paramter to retreive datadog user information for that region
+
+**NOTE**: enter `US` or `EU` for the region
 
 `./datadog_audit.rb <region>`
