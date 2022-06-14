@@ -51,7 +51,6 @@ end
 def get_role_info
     role_response = $conn.get(@datadog_region + '/api/v2/roles?page[size]=100' , nil, {  'Content-Type' => 'application/json' })
 
-    byebug
     # Map datadog role ids to role name
     @datadog_roles = Hash.new
     role_response.body["data"].each do |role|
