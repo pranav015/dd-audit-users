@@ -9,7 +9,7 @@ require 'faraday'
 require 'faraday/net_http'
 
 require 'dotenv'
-Dotenv.load
+Dotenv.load('../.env')
 
 
 def setup_connection
