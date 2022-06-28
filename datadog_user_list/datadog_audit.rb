@@ -69,10 +69,14 @@ def write_to_csv
     end
 end
 
-# method calls (in sequential order)
-datadog_region_settings
-setup_connection
-get_user_info
-get_role_info
-create_user_list
-write_to_csv
+def run_application
+    # method calls (in sequential order)
+    datadog_region_settings
+    setup_connection
+    get_user_info
+    get_role_info
+    create_user_list
+    write_to_csv
+end
+
+run_application
