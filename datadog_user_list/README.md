@@ -17,7 +17,5 @@ This script takes stock of all the active users in both Datadog regions and crea
 
 **NOTE**: Enter either `US` or `EU` for the region parameter
 
-*if you get an error with running it, check to see if you have executable permissions enabled*
+*if you get an error trying to run the script, check to see if you have executable permissions enabled*
 `chmod +x datadog_audit.rb`
-
-

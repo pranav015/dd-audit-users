@@ -1,16 +1,6 @@
 # Datadog Audit Script
-This script takes stock of all the active users in both Datadog and creates a CSV file with their name and email  
+This repo contains multiple Datadog scripts to help with the auditing process. Please take a look at the directory of the scripts you are interested in using (each one conteains a README with instructions on how to set it up and run it).
 
-
-# How to use
-1.) Initialize project
-
-`bundle install`
-
-2.) Add your Datadog **APP** and **API** keys to the `.env` file
-
-3.) Run the following command with the appropriate region paramter to retreive datadog user information
-
-`./datadog_audit.rb <region>`
-
-**NOTE**: Enter either `US` or `EU` for the region parameter
+## Table of contents
+- [Get Active Users](datadog_user_list/README.md)
+- [Remove Users](remove_users/README.md)

@@ -2,14 +2,15 @@
 This script disables the Datadog accounts of all users listed in a CSV file 
 
 **NOTE**: The CSV file must only include the email addresses of the users to be disabled (no header included) 
-    Example format:
-        emailone@zendesk.com
-        emailtwo@zendesk.com
-        .
-        .
-        .
-        emailten@zendesk.com
-
+Example csv file format:
+```
+    emailone@zendesk.com
+    emailtwo@zendesk.com
+    .
+    .
+    .
+    emailten@zendesk.com
+```
 
 # How to use
 1.) Initialize project
@@ -27,7 +28,5 @@ This script disables the Datadog accounts of all users listed in a CSV file
 
 **NOTE**: Enter either `US` or `EU` for the region parameter
 
-*if you get an error with running it, check to see if you have executable permissions enabled*
+*if you get an error trying to run the script, check to see if you have executable permissions enabled*
 `chmod +x remove_users.rb`
-
-
