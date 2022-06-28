@@ -10,11 +10,11 @@ require 'faraday/net_http'
 
 require '../setup'
 
-DD_USER_URL = '/api/v2/users?page[size]=5000'.freeze
+DD_All_USERS_URL = '/api/v2/users?page[size]=5000'.freeze
 DD_ROLE_URL = '/api/v2/roles?page[size]=100'.freeze
 
 def get_user_info
-    response = $conn.get($datadog_region + DD_USER_URL, nil, {  'Content-Type' => 'application/json' })
+    response = $conn.get($datadog_region + DD_All_USERS_URL, nil, {  'Content-Type' => 'application/json' })
     @user_response = response.body["data"]
 end
 
