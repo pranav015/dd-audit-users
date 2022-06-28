@@ -14,12 +14,12 @@ DD_USER_URL = '/api/v2/users?page[size]=5000'.freeze
 DD_ROLE_URL = '/api/v2/roles?page[size]=100'.freeze
 
 def get_user_info
-    response = $conn.get(@datadog_region + DD_USER_URL, nil, {  'Content-Type' => 'application/json' })
+    response = $conn.get($datadog_region + DD_USER_URL, nil, {  'Content-Type' => 'application/json' })
     @user_response = response.body["data"]
 end
 
 def get_role_info
-    role_response = $conn.get(@datadog_region + DD_ROLE_URL, nil, {  'Content-Type' => 'application/json' })
+    role_response = $conn.get($datadog_region + DD_ROLE_URL, nil, {  'Content-Type' => 'application/json' })
 
     # Map datadog role ids to role name
     @datadog_roles = Hash.new
@@ -58,7 +58,7 @@ def create_user_list
 end
 
 def write_to_csv
-    region =  @datadog_region == 'https://api.datadoghq.com' ? 'us' : 'eu'
+    region =  $datadog_region == 'https://api.datadoghq.com' ? 'us' : 'eu'
     headers = ["Name", "Email", "Status", "Role Ids", "Role Names", "Created At", "Modified At"]
     CSV.open("users_#{region}.csv", "w") do |csv|
         csv << headers
@@ -69,7 +69,7 @@ def write_to_csv
     end
 end
 
-# method calls
+# method calls (in sequential order)
 datadog_region_settings
 setup_connection
 get_user_info
