@@ -9,17 +9,15 @@ require 'faraday'
 require 'faraday/net_http'
 
 require '../setup'
-
-DD_All_USERS_URL = '/api/v2/users?page[size]=5000'.freeze
-DD_ROLE_URL = '/api/v2/roles?page[size]=100'.freeze
+require '../config/urls'
 
 def get_user_info
-    response = $conn.get($datadog_region + DD_All_USERS_URL, nil, {  'Content-Type' => 'application/json' })
+    response = $conn.get($datadog_region + dd_all_active_users_url, nil, {  'Content-Type' => 'application/json' })
     @user_response = response.body["data"]
 end
 
 def get_role_info
-    role_response = $conn.get($datadog_region + DD_ROLE_URL, nil, {  'Content-Type' => 'application/json' })
+    role_response = $conn.get($datadog_region + dd_roles_base_url, nil, {  'Content-Type' => 'application/json' })
 
     # Map datadog role ids to role name
     @datadog_roles = Hash.new
@@ -58,7 +56,7 @@ def create_user_list
 end
 
 def write_to_csv
-    region =  $datadog_region == 'https://api.datadoghq.com' ? 'us' : 'eu'
+    region =  $datadog_region == dd_us_base_url ? 'us' : 'eu'
     headers = ["Name", "Email", "Status", "Role Ids", "Role Names", "Created At", "Modified At"]
     CSV.open("users_#{region}.csv", "w") do |csv|
         csv << headers

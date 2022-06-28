@@ -9,15 +9,13 @@ require 'faraday'
 require 'faraday/net_http'
 
 require '../setup'
-
-DD_All_ACTIVE_USERS_URL = '/api/v2/users?page[size]=5000&filter[status]=Active'.freeze
-DD_SINGLE_USER_BASE_URL = '/api/v2/users/'.freeze
+require '../config/urls'
 
 @user_map = Hash.new
 @users_not_found = Array.new
 
 def get_user_info
-    response = $conn.get($datadog_region + DD_All_ACTIVE_USERS_URL, nil, {  'Content-Type' => 'application/json' })
+    response = $conn.get($datadog_region + dd_all_active_users_url, nil, {  'Content-Type' => 'application/json' })
     @user_response = response.body["data"]
 end
 
@@ -29,7 +27,7 @@ end
 
 def remove_users
     puts "Removing users...this may take a few minutes"
-    region = $datadog_region == 'https://api.datadoghq.com' ? 'us' : 'eu'
+    region = $datadog_region == dd_us_base_url ? 'us' : 'eu'
 
     # read in user emails from csv file and disable their accounts
     CSV.foreach(("users-to-remove-#{region}.csv"), headers: false, col_sep: ",") do |item|
@@ -39,15 +37,15 @@ def remove_users
         if user_id.nil?
             @users_not_found << email
         else
-            $conn.delete($datadog_region + DD_SINGLE_USER_BASE_URL + user_id , nil, {  'Content-Type' => 'application/json' })
-            puts "user disabled: #{email}"  #remove this
+            $conn.delete($datadog_region + dd_us_base_url + user_id , nil, {  'Content-Type' => 'application/json' })
+            puts "user disabled: #{email}"
             sleep(3)
         end
     end
 end
 
 def list_users_not_found
-    region = $datadog_region == 'https://api.datadoghq.com' ? 'us' : 'eu'
+    region = $datadog_region == dd_us_base_url ? 'us' : 'eu'
     begin
         file = File.open("missing_users-#{region}.csv", "a")
         file.write("List of missing users:\n")
