@@ -8,48 +8,18 @@ require 'fileutils'
 require 'faraday'
 require 'faraday/net_http'
 
-require 'dotenv'
-Dotenv.load('../.env')
+require '../setup'
 
-
-def setup_connection
-    # Faraday connection details
-    Faraday.default_adapter = :net_http
-
-    $dd_region_api = @datadog_region == 'https://api.datadoghq.com' ? ENV['DD_API_KEY'] : ENV['DD_API_KEY_EU']
-    $dd_region_app = @datadog_region == 'https://api.datadoghq.com' ? ENV['DD_APP_KEY'] : ENV['DD_APP_KEY_EU']
-
-    $conn = Faraday.new(
-    url: @datadog_region,
-    params: {param: '1'},
-    headers: {
-        'Content-Type' => 'application/json',
-        'DD-API-KEY' => $dd_region_api ,
-        'DD-APPLICATION-KEY' => $dd_region_app
-        }
-    )
-    $conn.request :json
-    $conn.response :json
-end
-
-def datadog_region_settings
-    user_input = ARGV[0].downcase
-
-    if user_input != 'us' && user_input != 'eu'
-        abort "Invalid input, exiting..."
-        exit 1
-    end
-
-    @datadog_region = user_input == 'us' ? 'https://api.datadoghq.com' : 'https://api.datadoghq.eu'
-end
+DD_USER_URL = '/api/v2/users?page[size]=5000'.freeze
+DD_ROLE_URL = '/api/v2/roles?page[size]=100'.freeze
 
 def get_user_info
-    response = $conn.get(@datadog_region + '/api/v2/users?page[size]=5000' , nil, {  'Content-Type' => 'application/json' })
+    response = $conn.get(@datadog_region + DD_USER_URL, nil, {  'Content-Type' => 'application/json' })
     @user_response = response.body["data"]
 end
 
 def get_role_info
-    role_response = $conn.get(@datadog_region + '/api/v2/roles?page[size]=100' , nil, {  'Content-Type' => 'application/json' })
+    role_response = $conn.get(@datadog_region + DD_ROLE_URL, nil, {  'Content-Type' => 'application/json' })
 
     # Map datadog role ids to role name
     @datadog_roles = Hash.new
@@ -97,7 +67,6 @@ def write_to_csv
             csv << user_row
         end
     end
-
 end
 
 # method calls
