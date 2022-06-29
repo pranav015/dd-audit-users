@@ -11,8 +11,8 @@ require 'faraday/net_http'
 require '../setup'
 require '../config/urls'
 
-def get_user_info
-    response = $conn.get($datadog_region + dd_all_active_users_url, nil, {  'Content-Type' => 'application/json' })
+def get_user_info(user_status_url)
+    response = $conn.get($datadog_region + user_status_url, nil, {  'Content-Type' => 'application/json' })
     @user_response = response.body["data"]
 end
 
@@ -55,10 +55,10 @@ def create_user_list
     end
 end
 
-def write_to_csv
+def write_to_csv(file_name)
     region =  $datadog_region == dd_us_base_url ? 'us' : 'eu'
     headers = ["Name", "Email", "Status", "Role Ids", "Role Names", "Created At", "Modified At"]
-    CSV.open("users_#{region}.csv", "w") do |csv|
+    CSV.open("#{file_name}_#{region}.csv", "w") do |csv|
         csv << headers
 
         @user_list.each do |user_row|
@@ -67,14 +67,51 @@ def write_to_csv
     end
 end
 
-def run_application
+def get_all_users
     # method calls (in sequential order)
     datadog_region_settings
     setup_connection
-    get_user_info
+    get_user_info(dd_all_users_url)
     get_role_info
     create_user_list
-    write_to_csv
+    write_to_csv("all")
+end
+
+def get_all_active_users
+    # method calls (in sequential order)
+    datadog_region_settings
+    setup_connection
+    get_user_info(dd_all_active_users_url)
+    get_role_info
+    create_user_list
+    write_to_csv("active")
+end
+
+def get_all_disabled_users
+    # method calls (in sequential order)
+    datadog_region_settings
+    setup_connection
+    get_user_info(dd_all_disabled_users_url)
+    get_role_info
+    create_user_list
+    write_to_csv("disabled")
+end
+
+def get_all_pending_users
+    # method calls (in sequential order)
+    datadog_region_settings
+    setup_connection
+    get_user_info(dd_all_pending_users_url)
+    get_role_info
+    create_user_list
+    write_to_csv("pending")
+end
+
+def run_application
+    get_all_users
+    get_all_active_users
+    get_all_disabled_users
+    get_all_pending_users
 end
 
 run_application
