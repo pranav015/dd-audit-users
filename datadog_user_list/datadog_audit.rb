@@ -67,51 +67,33 @@ def write_to_csv(file_name)
     end
 end
 
-def get_all_users
+def generate_audit_report(dd_url, file_name)
+    puts "Generating report for #{file_name}-users..."
+    
     # method calls (in sequential order)
     datadog_region_settings
     setup_connection
-    get_user_info(dd_all_users_url)
+    get_user_info(dd_url)
     get_role_info
     create_user_list
-    write_to_csv("all")
+    write_to_csv(file_name)
 end
 
-def get_all_active_users
-    # method calls (in sequential order)
-    datadog_region_settings
-    setup_connection
-    get_user_info(dd_all_active_users_url)
-    get_role_info
-    create_user_list
-    write_to_csv("active")
+def start_message
+    puts "Application running..."
 end
 
-def get_all_disabled_users
-    # method calls (in sequential order)
-    datadog_region_settings
-    setup_connection
-    get_user_info(dd_all_disabled_users_url)
-    get_role_info
-    create_user_list
-    write_to_csv("disabled")
-end
-
-def get_all_pending_users
-    # method calls (in sequential order)
-    datadog_region_settings
-    setup_connection
-    get_user_info(dd_all_pending_users_url)
-    get_role_info
-    create_user_list
-    write_to_csv("pending")
+def end_message
+    puts "Completed!"
 end
 
 def run_application
-    get_all_users
-    get_all_active_users
-    get_all_disabled_users
-    get_all_pending_users
+    start_message
+    generate_audit_report(dd_all_users_url, "all")               # Generate report for all users
+    generate_audit_report(dd_all_active_users_url, "active")     # Generate report for all active users
+    generate_audit_report(dd_all_disabled_users_url, "disabled") # Generate report for all disabled users
+    generate_audit_report(dd_all_pending_users_url, "pending")   # Generate report for all pending users
+    end_message
 end
 
 run_application
