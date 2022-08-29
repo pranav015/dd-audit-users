@@ -37,7 +37,7 @@ def remove_users
         if user_id.nil?
             @users_not_found << email
         else
-            $conn.delete($datadog_region + dd_us_base_url + user_id , nil, {  'Content-Type' => 'application/json' })
+            $conn.delete($datadog_region + dd_remove_users_url + user_id , nil, {  'Content-Type' => 'application/json' })
             puts "user disabled: #{email}"
             sleep(3)
         end

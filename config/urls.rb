@@ -8,6 +8,10 @@ def dd_eu_base_url
     'https://api.datadoghq.eu'
 end
 
+def dd_remove_users_url
+    '/api/v2/users/'
+end
+
 def dd_all_users_url
     '/api/v2/users?page[size]=6000'
 end
