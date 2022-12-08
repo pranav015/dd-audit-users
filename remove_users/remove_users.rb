@@ -28,6 +28,7 @@ end
 def remove_users
     puts "Removing users...this may take a few minutes"
     region = $datadog_region == dd_us_base_url ? 'us' : 'eu'
+    dd_url = $datadog_region == dd_us_base_url ? dd_us_base_url : dd_eu_base_url
 
     # read in user emails from csv file and disable their accounts
     CSV.foreach(("users-to-remove-#{region}.csv"), headers: false, col_sep: ",") do |item|
@@ -37,7 +38,7 @@ def remove_users
         if user_id.nil?
             @users_not_found << email
         else
-            $conn.delete($datadog_region + dd_remove_users_url + user_id , nil, {  'Content-Type' => 'application/json' })
+            $conn.delete(dd_url + dd_single_user_id_url + user_id, nil, {  'Content-Type' => 'application/json' })
             puts "user disabled: #{email}"
             sleep(3)
         end
