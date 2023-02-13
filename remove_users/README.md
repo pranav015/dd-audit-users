@@ -1,16 +1,5 @@
 # Datadog Script To Remove Users Listed in CSV file
-This script disables the Datadog accounts of all users listed in a CSV file
-
-**NOTE**: The CSV file must only include the email addresses of the users to be disabled (no header included) 
-Example csv file format:
-```
-    emailone@zendesk.com
-    emailtwo@zendesk.com
-    .
-    .
-    .
-    emailten@zendesk.com
-```
+This script disables the Datadog accounts of all users listed by email address in a CSV file
 
 # How to use
 1.) Initialize project
@@ -22,9 +11,18 @@ Example csv file format:
 
 2.) Add your Datadog **APP** and **API** keys to the `.env` file
 
-3.) Create a csv files with the following name (make sure the file ends with `-us` or `-eu`)
-`users-to-remove-us.csv` For DD US users
-`users-to-remove-eu.csv` For DD EU users
+3.) Add the email addresses of all users to remove into the `users-to-remove-us.csv` and `users-to-remove-eu.csv` files in this directory
+
+**NOTE**: The CSV file must only include the email addresses of the users to be disabled (no header included) 
+Example csv file format:
+```
+    emailone@zendesk.com
+    emailtwo@zendesk.com
+    .
+    .
+    .
+    emailten@zendesk.com
+```
 
 4.) Run the following command with the appropriate region paramter to retreive datadog user information
 
