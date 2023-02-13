@@ -5,6 +5,9 @@ require 'dotenv'
 Dotenv.load('../.env')
 
 def datadog_region_settings
+  Kernel.abort("Region parameter must be set") if ARGV.length == 0
+  Kernel.abort("Wrong number of parameters") if ARGV.length > 1
+
   user_input = ARGV[0].downcase
 
   if user_input != 'us' && user_input != 'eu'

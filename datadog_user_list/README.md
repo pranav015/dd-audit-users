@@ -17,5 +17,7 @@ This script takes stock of all the active, disabled, and pending user accounts i
 
 **NOTE**: Enter either `US` or `EU` for the region parameter
 
+The script will write all the generated user reports to the "output" folder
+
 *if you get an error when trying to run the script, check to see if you have executable permissions enabled*
 `chmod +x datadog_audit.rb`

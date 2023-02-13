@@ -26,8 +26,8 @@ def get_role_info
   end
 end
 
+# create a 2D array of users to write to csv file
 def create_user_list
-  # create a 2D array of users to write to csv file
   @user_list = []
 
   @user_response.each do |user|
@@ -58,7 +58,11 @@ end
 def write_to_csv(file_name)
   region =  $datadog_region == dd_us_base_url ? 'us' : 'eu'
   headers = ['Name', 'Email', 'Status', 'Role Ids', 'Role Names', 'Created At', 'Modified At']
-  CSV.open("#{file_name}_#{region}.csv", 'w') do |csv|
+
+  # Create output directory if it doesn't exist
+  FileUtils.mkdir('./output') unless Dir.exist?('./output')
+
+  CSV.open("./output/#{file_name}_#{region}.csv", 'w') do |csv|
     csv << headers
 
     @user_list.each do |user_row|
