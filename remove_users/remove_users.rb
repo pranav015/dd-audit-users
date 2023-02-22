@@ -9,8 +9,7 @@ require 'fileutils'
 require 'faraday'
 require 'faraday/net_http'
 
-require '../setup'
-require '../config/urls'
+require '../config'
 
 @user_map = {}
 @users_not_found = []

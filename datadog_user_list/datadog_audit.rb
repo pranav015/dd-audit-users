@@ -9,7 +9,7 @@ require 'faraday'
 require 'faraday/net_http'
 
 require '../dd_client'
-require '../setup'
+require '../config/setup'
 require '../config/urls'
 
 def get_user_info(user_status_url)

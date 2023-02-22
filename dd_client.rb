@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require '../setup'
+require '../config/setup'
 
 class DDClient
     attr_reader :DD_REGION
