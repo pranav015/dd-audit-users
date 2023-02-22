@@ -3,6 +3,3 @@
 
 # Ignore files related to APP and API keys
 .env
-
-# Ignore all csv files
-*.csv

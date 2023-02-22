@@ -30,9 +30,18 @@ def remove_users
   puts 'Removing users...this may take a few minutes'
   region = $datadog_region == dd_us_base_url ? 'us' : 'eu'
   dd_url = $datadog_region == dd_us_base_url ? dd_us_base_url : dd_eu_base_url
+  file_path = "users-to-remove-#{region}.csv"
+
+  # Create csv files if they don't exist
+  if !File.exists?(file_path)
+    file = File.open('./output/filters.tf', 'w')
+    file.close
+
+    Kernel.abort("CSV files are empty")
+  end
 
   # read in user emails from csv file and disable their accounts
-  CSV.foreach("users-to-remove-#{region}.csv", headers: false, col_sep: ',') do |item|
+  CSV.foreach(file_path, headers: false, col_sep: ',') do |item|
     email = item[0]
     user_id = @user_map[email]
 

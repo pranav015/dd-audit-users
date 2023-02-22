@@ -16,12 +16,12 @@ This script disables the Datadog accounts of all users listed by email address i
 **NOTE**: The CSV file must only include the email addresses of the users to be disabled (no header included) 
 Example csv file format:
 ```
-    emailone@zendesk.com
-    emailtwo@zendesk.com
+    email_one@zendesk.com
+    email_two@zendesk.com
     .
     .
     .
-    emailten@zendesk.com
+    email_ten@zendesk.com
 ```
 
 4.) Run the following command with the appropriate region paramter to retreive datadog user information
