@@ -1,7 +1,7 @@
-## Datadog Script To Retrieve All Active Users
+# Datadog Script To Retrieve All Active Users
 This script takes stock of all the active, disabled, and pending user accounts in both Datadog regions and creates a CSV file with their name, email addresses, and other relevant info 
 
-# How to run
+## How to run
 1.) Initialize project
 
 `bundle install`

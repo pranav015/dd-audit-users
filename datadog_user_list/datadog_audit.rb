@@ -8,16 +8,17 @@ require 'fileutils'
 require 'faraday'
 require 'faraday/net_http'
 
+require '../dd_client'
 require '../setup'
 require '../config/urls'
 
 def get_user_info(user_status_url)
-  response = $conn.get($datadog_region + user_status_url, nil, { 'Content-Type' => 'application/json' })
+  response = @client.get_data(user_status_url)
   @user_response = response.body['data']
 end
 
 def get_role_info
-  role_response = $conn.get($datadog_region + dd_roles_base_url, nil, { 'Content-Type' => 'application/json' })
+  role_response = @client.get_data(dd_roles_base_url)
 
   # Map datadog role ids to role name
   @datadog_roles = {}
@@ -56,7 +57,7 @@ def create_user_list
 end
 
 def write_to_csv(file_name)
-  region =  $datadog_region == dd_us_base_url ? 'us' : 'eu'
+  region =  @client.DD_REGION == dd_us_base_url ? 'us' : 'eu'
   headers = ['Name', 'Email', 'Status', 'Role Ids', 'Role Names', 'Created At', 'Modified At']
 
   # Create output directory if it doesn't exist
@@ -75,8 +76,6 @@ def generate_audit_report(dd_url, file_name)
   puts "Generating report for #{file_name}-users..."
 
   # method calls (in sequential order)
-  datadog_region_settings
-  setup_connection
   get_user_info(dd_url)
   get_role_info
   create_user_list
@@ -92,6 +91,8 @@ def end_message
 end
 
 def run_application
+  @client = DDClient.new
+
   start_message
   generate_audit_report(dd_all_users_url, 'all')               # Generate report for all users
   generate_audit_report(dd_all_active_users_url, 'active')     # Generate report for all active users
