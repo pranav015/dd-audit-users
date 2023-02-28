@@ -15,10 +15,16 @@ require '../config/urls'
 def get_user_info(user_status_url)
   response = @client.get_data(user_status_url)
   @user_response = response.body['data']
+rescue IOError => e
+  Kernel.abort("Error reaching endpoint: #{user_status_url}")
 end
 
 def get_role_info
-  role_response = @client.get_data(dd_roles_base_url)
+  begin
+    role_response = @client.get_data(dd_roles_base_url)
+  rescue IOError => e
+    Kernel.abort("Error reaching endpoint: #{dd_roles_base_url}")
+  end
 
   # Map datadog role ids to role name
   @datadog_roles = {}

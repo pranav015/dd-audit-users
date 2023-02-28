@@ -5,8 +5,8 @@ require 'dotenv'
 Dotenv.load('../.env')
 
 def datadog_region_settings
-  Kernel.abort("Region parameter must be set") if ARGV.length == 0
-  Kernel.abort("Wrong number of parameters") if ARGV.length > 1
+  Kernel.abort('Region parameter must be set') if ARGV.empty?
+  Kernel.abort('Wrong number of parameters') if ARGV.length > 1
 
   user_input = ARGV[0].downcase
 
@@ -15,9 +15,7 @@ def datadog_region_settings
     exit 1
   end
 
-  datadog_region = user_input == 'us' ? dd_us_base_url : dd_eu_base_url
-
-  datadog_region
+  user_input == 'us' ? dd_us_base_url : dd_eu_base_url
 end
 
 def setup_connection(datadog_region)

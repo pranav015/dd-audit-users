@@ -1,7 +1,7 @@
 # Datadog Script To Remove Users Listed in CSV file
 This script disables the Datadog accounts of all users listed by email address in a CSV file
 
-# How to use
+## How to run
 1.) Initialize project
 
 `bundle install`

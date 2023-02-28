@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# frozen_string_literal: true
 
 require 'csv'
 require 'net/http'
@@ -15,8 +14,13 @@ require '../config'
 @users_not_found = []
 
 def get_user_info
-  response = $conn.get($datadog_region + dd_all_active_users_url, nil, { 'Content-Type' => 'application/json' })
-  @user_response = response.body['data']
+  begin
+    response = @client.get_data(dd_all_active_users_url)
+    @user_response = response.body['data']
+  end
+  rescue IOError => e
+    Kernel.abort("Error reaching endpoint: #{dd_all_active_users_url}")
+  end
 end
 
 def create_user_map
@@ -27,8 +31,8 @@ end
 
 def remove_users
   puts 'Removing users...this may take a few minutes'
-  region = $datadog_region == dd_us_base_url ? 'us' : 'eu'
-  dd_url = $datadog_region == dd_us_base_url ? dd_us_base_url : dd_eu_base_url
+  region = @client.DD_REGION == dd_us_base_url ? 'us' : 'eu'
+  dd_url = @client.DD_REGION == dd_us_base_url ? dd_us_base_url : dd_eu_base_url
   file_path = "users-to-remove-#{region}.csv"
 
   # Create csv files if they don't exist
@@ -47,15 +51,23 @@ def remove_users
     if user_id.nil?
       @users_not_found << email
     else
-      $conn.delete(dd_url + dd_single_user_id_url + user_id, nil, { 'Content-Type' => 'application/json' })
+      begin
+        @client.remove_data(dd_url + dd_single_user_id_url + user_id)
+      end
+      rescue IOError => e
+        Kernel.abort("Error reaching endpoint: #{dd_url + dd_single_user_id_url}")
+      end
+
       puts "user disabled: #{email}"
+
+      # avoid rate limits
       sleep(3)
     end
   end
 end
 
 def list_users_not_found
-  region = $datadog_region == dd_us_base_url ? 'us' : 'eu'
+  region = @client.DD_REGION == dd_us_base_url ? 'us' : 'eu'
   begin
     file = File.open("missing_users-#{region}.csv", 'a')
     file.write("List of missing users:\n")
@@ -79,10 +91,10 @@ def end_message
 end
 
 def run_application
+  @client = DDClient.new
+
   # method calls (in sequential order)
   start_message
-  datadog_region_settings
-  setup_connection
   get_user_info
   create_user_map
   remove_users
