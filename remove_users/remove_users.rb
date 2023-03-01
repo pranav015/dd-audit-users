@@ -8,7 +8,9 @@ require 'fileutils'
 require 'faraday'
 require 'faraday/net_http'
 
-require '../config'
+require '../dd_client'
+require '../config/setup'
+require '../config/urls'
 
 @user_map = {}
 @users_not_found = []
@@ -17,7 +19,6 @@ def get_user_info
   begin
     response = @client.get_data(dd_all_active_users_url)
     @user_response = response.body['data']
-  end
   rescue IOError => e
     Kernel.abort("Error reaching endpoint: #{dd_all_active_users_url}")
   end
@@ -53,7 +54,6 @@ def remove_users
     else
       begin
         @client.remove_data(dd_url + dd_single_user_id_url + user_id)
-      end
       rescue IOError => e
         Kernel.abort("Error reaching endpoint: #{dd_url + dd_single_user_id_url}")
       end
