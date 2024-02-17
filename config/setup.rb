@@ -1,10 +1,29 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require_relative './sites'
 require 'dotenv'
 Dotenv.load('../.env')
 
-def datadog_region_settings
+def initialize_client
+  # retrieve region details
+  region = get_region_settings
+
+  DatadogAPIClient.configure do |config|
+    if region.eql?('us')
+      config.api_key = ENV['DD_API_KEY']
+      config.application_key = ENV['DD_APP_KEY']
+    elsif region.eql?('eu')
+      config.api_key = ENV['DD_API_KEY_EU']
+      config.application_key = ENV['DD_APP_KEY_EU']
+    end
+
+    config.server_variables[:site] = region.eql?('us') ? dd_us_site : dd_eu_site
+    config.enable_retry = true
+  end
+end
+
+def get_region_settings
   Kernel.abort('Region parameter must be set') if ARGV.empty?
   Kernel.abort('Wrong number of parameters') if ARGV.length > 1
 
@@ -15,27 +34,5 @@ def datadog_region_settings
     exit 1
   end
 
-  user_input == 'us' ? dd_us_base_url : dd_eu_base_url
-end
-
-def setup_connection(datadog_region)
-  # Faraday connection details
-  Faraday.default_adapter = :net_http
-
-  dd_region_api = datadog_region == dd_us_base_url ? ENV['DD_API_KEY'] : ENV['DD_API_KEY_EU']
-  dd_region_app = datadog_region == dd_us_base_url ? ENV['DD_APP_KEY'] : ENV['DD_APP_KEY_EU']
-
-  conn = Faraday.new(
-    url: datadog_region,
-    params: { param: '1' },
-    headers: {
-      'Content-Type' => 'application/json',
-      'DD-API-KEY' => dd_region_api,
-      'DD-APPLICATION-KEY' => dd_region_app
-    }
-  )
-  conn.request :json
-  conn.response :json
-
-  conn
+  user_input
 end
