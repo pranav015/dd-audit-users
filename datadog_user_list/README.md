@@ -13,7 +13,7 @@ This script takes stock of all the active, disabled, and pending user accounts i
 
 3.) Run the following command with the appropriate region paramter to retreive datadog user information
 
-`./datadog_audit.rb <region>`
+`./dd_users_list.rb <region>`
 
 **NOTE**: Enter either `US` or `EU` for the region parameter
 
