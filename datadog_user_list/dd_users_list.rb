@@ -16,7 +16,7 @@ class DatadogUsersListClient
     @user_roles = {}
 
     # get list of user roles and populate hash
-    get_user_roles
+    create_user_roles_map
   end
 
   def get_user_info(status)
@@ -40,22 +40,21 @@ class DatadogUsersListClient
 
       # call api endpoint and write to csv file
       api_instance.list_users_with_pagination(opts) do |item|
-        row << item.attributes.name
-        row << item.attributes.email
-        row << item.attributes.status
-
         # loop through roles
         item.relationships.roles.data.each do |role| # pick up here
           role_ids += role_ids.empty? ? role.id.to_s : ", #{role.id}"
           role_names += role_names.empty? ? @user_roles[role.id.to_s].to_s : ", #{@user_roles[role.id.to_s]}"
         end
 
-        # append roles to file
-        row << role_ids
-        row << role_names
-
-        row << item.attributes.created_at
-        row << item.attributes.modified_at
+        row = [
+          item.attributes.name,
+          item.attributes.email,
+          item.attributes.status,
+          role_ids,
+          role_names,
+          item.attributes.created_at,
+          item.attributes.modified_at
+        ]
 
         # append to csv file
         csv << row
@@ -70,7 +69,7 @@ class DatadogUsersListClient
 
   private
 
-  def get_user_roles
+  def create_user_roles_map
     roles_api_instance = DatadogAPIClient::V2::RolesAPI.new
     opts = {
       page_size: 100
