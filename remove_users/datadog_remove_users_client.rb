@@ -28,7 +28,7 @@ class DatadogRemoveUsersClient
 
     CSV.foreach("users-to-remove-#{ARGV[0].downcase}.csv", headers: false, col_sep: ',') do |line_item|
         email = line_item[0]
-        user_id = $user_map[email]
+        user_id = @user_map[email]
     
         if user_id.nil?
           @users_not_found << email
@@ -59,24 +59,3 @@ end
     end
   end
 end
-
-def start_message
-  puts 'Application running...'
-end
-
-def end_message
-  puts 'Completed!'
-end
-
-def run_application
-  start_message
-
-  dd_client = DatadogRemoveUsersClient.new
-
-  # read in and remove users from csv file
-  dd_client.remove_users
-
-  end_message
-end
-
-run_application
